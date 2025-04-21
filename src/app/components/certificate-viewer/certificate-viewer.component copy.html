@@ -1,0 +1,60 @@
+<mat-toolbar color="primary"> X.509 Certificate Viewer 🚀 </mat-toolbar>
+
+<!--<div class="upload-section">
+  <input type="file" id="fileInput" (change)="onFileSelected($event)" />
+</div>-->
+<div
+  id="dropZone"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  class="drop-zone"
+>
+  <label for="fileInput" class="upload-button">
+    📄 Glisser/Déposer ou Cliquer pour charger un certificat (.pem, .crt)
+  </label>
+  <input type="file" id="fileInput" hidden (change)="onFileSelected($event)" />
+</div>
+
+<mat-card *ngIf="certificate" class="certificate-card">
+  <mat-card-title>Informations Générales</mat-card-title>
+  <mat-card-content>
+    <div><strong>Version:</strong> {{ certificate.version }}</div>
+    <div><strong>Serial Number:</strong> {{ certificate.serialNumber }}</div>
+    <div>
+      <strong>Signature Algorithm:</strong>
+      {{ certificate.signatureAlgorithm?.label }}
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-accordion *ngIf="certificate">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Détail : Issuer </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>{{ certificate.issuer?.formatted }}</div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Validité </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>Début: {{ certificate.validity?.notBefore | date }}</div>
+    <div>Fin: {{ certificate.validity?.notAfter | date }}</div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Détail : Subject </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>{{ certificate.subject?.formatted }}</div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngFor="let ext of certificate.extensions">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ ext.label }}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <pre>{{ ext | json }}</pre>
+  </mat-expansion-panel>
+</mat-accordion>
